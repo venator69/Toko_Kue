@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <string.h>
+int i;
+int hari = 1, count = 0;
+
+void quit();
+void init();
+void bukatoko(int jual[5]);
+int findindex(char kue[5][100], char key[100]);
+void jualkue(char kue[5][100], int jual[5]);
+void tutuptoko(char kue[5][100], long int profit[5], int jual[5], char key[100]);
+
+
+void bukatoko(int jual[5]){
+    char kue[5][100] = {"N"}, key[100] = "",pass1[100] = "TUTUP",pass2[100] = "CUKUP",pass3[100] = "N";
+    long int harga_pokok[5] = {0},harga_jual[5] = {0}, profit[5] = {0};
+    for (i = 0; i < 5; i++){
+        strcpy(kue[i],pass3);
+    }
+    i = 0;
+    while(i<5){
+        printf("Masukkan jenis ke-%d > ",i+1);
+        scanf("%s",key);
+        if (strcmp(key,pass1)==0){
+            tutuptoko(kue,profit,jual,key);
+            break;
+        }
+        else if (strcmp(key,pass2)==0){
+            break;
+        }
+        else {
+            scanf("%ld %ld",&harga_pokok[i],&harga_jual[i]);
+            if (harga_pokok[i] >= harga_jual[i]){
+                printf("RUGI DONK!!! :V\n");
+            }
+            else{
+                strcpy(kue[i],key);
+                i++;
+            }
+        }
+        
+    }
+    for (i = 0; i<5; i++){
+        profit[i] = harga_jual[i] - harga_pokok[i];
+    }
+    jualkue(kue,jual);
+    tutuptoko(kue,profit,jual,key);
+}
+int findindex(char kue[5][100], char key[100]){
+    int index = -1;
+    for (i=0;i<5;i++){
+        if (strcmp(kue[i], key) == 0){
+            index = i;
+            break;
+        }
+    }
+        return index;
+}
+void jualkue(char kue[5][100], int jual[5]){
+    printf("PERINTAH!\n");
+    printf("1. Masukkan nama produk [spasi] jumlah penjualan!\n2. ketik TUTUP [spasi] 0 untuk mengakhiri Hari!\n");
+    int tempsell,index = 0;
+    char pass[100] = "TUTUP",tempprod[100] = "";
+    while(1){
+        printf("Entry > ");
+        scanf("%s %d",&tempprod,&tempsell);
+        index = findindex(kue,tempprod);
+        if (index == -1){
+            if (strcmp(tempprod,pass) == 0 && tempsell == 0){
+                break;
+            }
+            printf("== %s tidak tersedia!\n",tempprod);
+        }
+        else {
+            printf("== %s %d buah Terjual!\n",tempprod,tempsell);
+            jual[index] += tempsell;
+        }
+    }
+}
+void tutuptoko(char kue[5][100], long int profit[5], int jual[5], char key[100]){ 
+    char pass1[100] = "TUTUP", pass2[5] = "N";
+    long int totalprofit = 0;
+    i = 0;
+    printf("TUTUP TOKO!\n");
+    if (strcmp(pass1,key) == 0){
+        printf("==Hari sedang libur !\n");
+        printf("TOTAL KEUNTUNGAN HARIAN: Rp.0");
+        count ++;
+    }
+    else{
+        for(i = 0; i<5 ;i ++){
+            if (strcmp(kue[i],pass2) == 0){
+                break;
+            }
+            printf("== %s %d buah terjual, keuntungan %ld\n",kue[i], jual[i],profit[i]*jual[i]);
+        }
+    for (i = 0; i<5; i++){
+        totalprofit += profit[i]*jual[i];
+    }
+    printf("TOTAL KEUNTUNGAN HARIAN: Rp.%ld\n",totalprofit);
+    }
+    printf("//////////////////////////////////////////////////////////////\n");
+    hari ++;
+    if (count == 3){
+        quit();
+        hari = 1;
+        count = 0;
+    }
+    init();
+    for (i = 0;i<5;i++){
+        jual[i] == 0;
+    }
+    bukatoko(jual);
+    }
+
+void init(){
+    printf("Hari ke-%d\n",hari);
+    printf("BUKA TOKO\n");
+    printf("PERINTAH!\n1. Masukkan keyword ""TUTUP"" untuk mengakhiri toko secara prematur!\n2. Masukkan keyword ""CUKUP"" untuk mencukupi jumlah kue!\n3. Masukkan keyword nama produk [spasi] harga pokok [spasi] harga jual untuk melakukan input!\n");
+}
+void quit(){
+    printf("\n\ntoko bangkrut :( \n\n\n");
+}
+int main(){
+    int jual[5] = {0};
+    init();
+    bukatoko(jual);
+    return 0;
+}
